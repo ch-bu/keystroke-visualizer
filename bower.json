@@ -1,6 +1,6 @@
 {
-  "name": "teaching-goal-generator",
-  "description": "A website that guides teachers in writing proper teaching goals",
+  "name": "learning-goal-generator",
+  "description": "A website that guides teachers in writing proper learning goals",
   "main": "index.js",
   "authors": [
     "Christian Burkhart"
@@ -8,9 +8,10 @@
   "license": "MIT",
   "keywords": [
     "learning",
-    "teaching goals",
+    "learning",
+    "goals"
   ],
-  "homepage": "https://github.com/ch-bu/teaching-goal-generator",
+  "homepage": "https://github.com/ch-bu/learning-goal-generator",
   "private": true,
   "dependencies": {
     "requirejs": "^2.2.0",
