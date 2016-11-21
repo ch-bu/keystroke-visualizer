@@ -1,2 +1,3 @@
-# learning-goal-generator
-This website guides teachers in writing proper learning goals
+# Teaching Goal Generator
+
+This website guides teachers in writing proper teaching goals
