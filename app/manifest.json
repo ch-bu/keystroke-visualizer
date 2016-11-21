@@ -1,0 +1,9 @@
+{
+	"manifest_version": 2,
+	"name": "Learning goal generator",
+	"start_url": ".",
+	"background-color": "#fff",
+	"description": "A webapp that helps teachers write learning goals",
+	"short_name": "LGG",
+	"display": "standalone"
+}
