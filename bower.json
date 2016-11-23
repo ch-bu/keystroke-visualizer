@@ -1,7 +1,6 @@
 {
   "name": "learning-goal-generator",
   "description": "A website that guides teachers in writing proper learning goals",
-  "main": "index.js",
   "authors": [
     "Christian Burkhart"
   ],

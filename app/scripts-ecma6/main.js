@@ -33,6 +33,7 @@ require.config({
 
 require(['jquery', 'backbone', 'underscore'], function($, Backbone, _) {
 
-  console.log('test');
+  console.log([1,2,3, 6].map(n => n + 1));
+
 
 });

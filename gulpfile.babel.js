@@ -19,6 +19,7 @@ import filter from 'gulp-filter';
 import requirejsOptimize from 'gulp-requirejs-optimize';
 import requireConvert from 'gulp-require-convert';
 import rjs from 'gulp-requirejs';
+import babel from 'gulp-babel';
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
@@ -37,7 +38,7 @@ gulp.task('bower-files', () => {
   // Pipe js files to vendor directory
   gulp.src(mainBower)
     .pipe(jsFiles)
-    .pipe(gulp.dest('app/scripts/vendor/'));
+    .pipe(gulp.dest('.tmp/scripts/vendor/'));
 });
 
 /**
@@ -50,16 +51,17 @@ gulp.task('lint', () =>
     .pipe($.if(!browserSync.active, $.eslint.failOnError()))
 );
 
-// /**
-//  * Convert js files from ecmascript 6 
-//  */
-// gulp.task('babel', () => {
-//   return gulp.src('app/babel/app.js')
-//     .pipe(babel({
-//       presets: ['es2015']
-//     }))
-//     .pipe(gulp.dest('app'));
-// });
+/**
+ * Convert js files from ecmascript 6 
+ */
+gulp.task('babel', () => {
+  return gulp.src(['app/scripts-ecma6/**/*.js',
+                  '!app/scripts-ecma6/vendor/*.js'])
+    .pipe(babel({
+      presets: ['es2015']
+    }))
+    .pipe(gulp.dest('.tmp/scripts'));
+});
 
 
 // /**
@@ -202,32 +204,32 @@ gulp.task('styles', () => {
 //     .pipe($.size({title: 'copy'}))
 // );
 
-/**
- * Scan your HTML for assets & optimize them
- */
-gulp.task('html', () => {
-  return gulp.src('app/*.html')
-    .pipe($.useref({
-      searchPath: '{.tmp,app}',
-      noAssets: true
-    }))
+// /**
+//  * Scan your HTML for assets & optimize them
+//  */
+// gulp.task('html', () => {
+//   return gulp.src('app/*.html')
+//     .pipe($.useref({
+//       searchPath: '{.tmp,app}',
+//       noAssets: true
+//     }))
 
-    // Minify any HTML
-    .pipe($.if('*.html', $.htmlmin({
-      removeComments: true,
-      collapseWhitespace: true,
-      collapseBooleanAttributes: true,
-      removeAttributeQuotes: true,
-      removeRedundantAttributes: true,
-      removeEmptyAttributes: true,
-      removeScriptTypeAttributes: true,
-      removeStyleLinkTypeAttributes: true,
-      removeOptionalTags: true
-    })))
-    // Output files
-    .pipe($.if('*.html', $.size({title: 'html', showFiles: true})))
-    .pipe(gulp.dest('.tmp'));
-});
+//     // Minify any HTML
+//     .pipe($.if('*.html', $.htmlmin({
+//       removeComments: true,
+//       collapseWhitespace: true,
+//       collapseBooleanAttributes: true,
+//       removeAttributeQuotes: true,
+//       removeRedundantAttributes: true,
+//       removeEmptyAttributes: true,
+//       removeScriptTypeAttributes: true,
+//       removeStyleLinkTypeAttributes: true,
+//       removeOptionalTags: true
+//     })))
+//     // Output files
+//     .pipe($.if('*.html', $.size({title: 'html', showFiles: true})))
+//     .pipe(gulp.dest('.tmp'));
+// });
 
 /**
  * Clean output directory
@@ -238,7 +240,7 @@ gulp.task('clean', () => del(['.tmp', 'dist/*', '!dist/.git'], {dot: true}));
 /**
  * Watch files for changes & reload
  */
-gulp.task('serve', ['styles'], () => {
+gulp.task('serve', ['bower-files', 'styles'], () => {
   browserSync({
     notify: false,
     // Customize the Browsersync console logging prefix
@@ -274,7 +276,7 @@ gulp.task('serve', ['styles'], () => {
 
   gulp.watch(['app/*.html'], reload);
   gulp.watch(['app/styles/*.scss'], ['styles', reload]);
-  gulp.watch(['app/scripts/**/*.js'], ['lint', reload]);
+  gulp.watch(['app/scripts-ecma6/**/*.js'], ['babel', 'lint', reload]);
   // gulp.watch(['app/images/**/*'], reload);
   // gulp.watch(['app/templates/*'], ['templates', reload]);
 });
