@@ -56,9 +56,11 @@ gulp.task('lint', () =>
  */
 gulp.task('babel', () => {
   return gulp.src(['app/scripts-ecma6/**/*.js',
+                   'app/scripts-ecma6/**/*.jsx',
                   '!app/scripts-ecma6/vendor/*.js'])
     .pipe(babel({
-      presets: ['es2015']
+      presets: ['es2015'],
+      plugins: ['transform-react-jsx']
     }))
     .pipe(gulp.dest('.tmp/scripts'));
 });

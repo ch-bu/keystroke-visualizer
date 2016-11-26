@@ -9,6 +9,7 @@ require.config({
     underscore: 'vendor/underscore',
     jquery: 'vendor/jquery',
     backbone: 'vendor/backbone',
+    react: 'vendor/react',
     // d3: 'vendor/d3',
     // handlebars: 'vendor/handlebars',
     // idb: 'vendor/idb',
@@ -31,9 +32,11 @@ require.config({
 });
 
 
-require(['jquery', 'backbone', 'underscore'], function($, Backbone, _) {
+require(['jquery', 'backbone', 'underscore', 'react'], 
+  function($, Backbone, _, React) {
 
   console.log([1,2,3, 6].map(n => n + 1));
+  console.log(React);
 
 
 });
