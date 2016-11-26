@@ -10,6 +10,7 @@ require.config({
     jquery: 'vendor/jquery',
     backbone: 'vendor/backbone',
     react: 'vendor/react',
+    reactdom: 'vendor/react-dom'
     // d3: 'vendor/d3',
     // handlebars: 'vendor/handlebars',
     // idb: 'vendor/idb',
@@ -32,11 +33,22 @@ require.config({
 });
 
 
-require(['jquery', 'backbone', 'underscore', 'react'], 
-  function($, Backbone, _, React) {
+require(['jquery', 'backbone', 'underscore', 'react', 'reactdom'],
+  function($, Backbone, _, React, ReactDOM) {
 
-  console.log([1,2,3, 6].map(n => n + 1));
-  console.log(React);
+  const app = document.getElementById('test');
+
+  class Layout extends React.Component {
+    render() {
+      return (
+        <h1>Hello, this is React</h1>
+      );
+    }
+  }
+
+  ReactDOM.render(<Layout/>, app);
+
+
 
 
 });
