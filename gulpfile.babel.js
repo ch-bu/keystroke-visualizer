@@ -65,7 +65,6 @@ gulp.task('babel', () => {
     .pipe(gulp.dest('.tmp/scripts'));
 });
 
-
 // /**
 //  * Build templates
 //  */
@@ -279,6 +278,7 @@ gulp.task('serve', ['bower-files', 'styles'], () => {
   gulp.watch(['app/*.html'], reload);
   gulp.watch(['app/styles/*.scss'], ['styles', reload]);
   gulp.watch(['app/scripts-ecma6/**/*.js'], ['babel', 'lint', reload]);
+  gulp.watch(['app/scripts-ecma6/templates/*.jsx'], ['babel', 'lint', reload]);
   // gulp.watch(['app/images/**/*'], reload);
   // gulp.watch(['app/templates/*'], ['templates', reload]);
 });

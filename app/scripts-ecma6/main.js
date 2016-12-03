@@ -4,21 +4,13 @@
 // https://github.com/tastejs/todomvc/tree/gh-pages/examples/backbone_require
 
 require.config({
-
   paths: {
     underscore: 'vendor/underscore',
     jquery: 'vendor/jquery',
     backbone: 'vendor/backbone',
     react: 'vendor/react',
-    reactdom: 'vendor/react-dom'
-    // d3: 'vendor/d3',
-    // handlebars: 'vendor/handlebars',
-    // idb: 'vendor/idb',
-    // moment: 'vendor/moment',
-    // mainView: 'app/views/main',
-    // templates: 'templates',
-    // foodCollection: 'app/collections/food-collection',
-    // foodModel: 'app/models/food-model',
+    reactdom: 'vendor/react-dom',
+    input: 'templates/input'
   },
 
   shim: {
@@ -33,22 +25,23 @@ require.config({
 });
 
 
-require(['jquery', 'backbone', 'underscore', 'react', 'reactdom'],
-  function($, Backbone, _, React, ReactDOM) {
+require(['jquery', 'backbone', 'react', 'reactdom', 'input'],
+  ($, Backbone, React, ReactDOM, Input) => {
 
-  const app = document.getElementById('test');
+    var MainView = Backbone.View.extend({
+      el: '#test',
+      
+      initialize: function() {
+        this.container = document.getElementById('container');
 
-  class Layout extends React.Component {
-    render() {
-      return (
-        <h1>Hello, this is React</h1>
-      );
-    }
-  }
+        // Render         
+        this.render();
+      },
 
-  ReactDOM.render(<Layout/>, app);
+      render: function() {
+        ReactDOM.render(<Input/>, this.container);
+      }
+    });
 
-
-
-
+    new MainView();
 });
