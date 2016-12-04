@@ -32,6 +32,7 @@ gulp.task('bower-files', () => {
 
   // Filter main bower files
   const jsFiles = filter('**/*.js');
+  const cssFiles = filter('**/*.css');
 
   var mainBower = mainBowerFiles();
 
@@ -39,6 +40,10 @@ gulp.task('bower-files', () => {
   gulp.src(mainBower)
     .pipe(jsFiles)
     .pipe(gulp.dest('.tmp/scripts/vendor/'));
+
+  gulp.src(mainBower)
+    .pipe(cssFiles)
+    .pipe(gulp.dest('app/styles/'));
 });
 
 /**
@@ -147,18 +152,25 @@ gulp.task('styles', () => {
   ];
 
   // For best performance, don't add Sass partials to `gulp.src`
-  return gulp.src([
+  gulp.src([
     'app/styles/*.scss',
   ])
-  .pipe($.newer('.tmp/styles'))
-  .pipe($.sourcemaps.init())
-  .pipe($.sass({precision: 10}).on('error', $.sass.logError))
-  .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
-  // Concatenate and minify styles
-  .pipe($.if('*.css', $.cssnano()))
-  .pipe($.size({title: 'styles'}))
-  .pipe($.sourcemaps.write('./'))
-  .pipe(gulp.dest('.tmp/styles'));
+    .pipe($.newer('.tmp/styles'))
+    .pipe($.sourcemaps.init())
+    .pipe($.sass({precision: 10}).on('error', $.sass.logError))
+    .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
+    // Concatenate and minify styles
+    .pipe($.if('*.css', $.cssnano()))
+    .pipe($.size({title: 'styles'}))
+    .pipe($.sourcemaps.write('./'))
+    .pipe(gulp.dest('.tmp/styles'));
+
+  gulp.src('app/styles/*.css')
+    .pipe($.newer('.temp/styles'))
+    .pipe($.sourcemaps.init())
+    .pipe($.if('*.css', $.cssnano()))
+    .pipe($.sourcemaps.write('./'))
+    .pipe(gulp.dest('.tmp/styles'));
 });
 
 // Concatenate and minify JavaScript. Optionally transpiles ES2015 code to ES5.

@@ -1,4 +1,32 @@
 html, body {
   background-color: #c628d7;
-  font-family: 'Aref Ruqaa', serif;
+  font-family: 'Dosis', serif;
 }
+
+.container {
+  #data-display {
+    height: 55vh;
+  }
+
+  #data-input {
+    height: 40vh;
+
+    #inputTextarea {
+      height: 90%;
+      outline: none;
+      background-color: #fff;
+      opacity: 0.7;
+      border-radius: 10px;
+      border: 0;
+      font-size: 2em;
+      padding: 15px;
+      
+
+      &:active {
+        box-shadow: none;
+      }
+    }
+  }
+
+}
+

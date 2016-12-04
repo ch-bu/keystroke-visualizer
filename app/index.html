@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Learning goal generator</title>
+    <title>Keystroke visualizer</title>
 
     <!-- Disable tap highlight on IE -->
     <meta name="msapplication-tap-highlight" content="no">
@@ -32,21 +32,20 @@
     <meta name="theme-color" content="#2F3BA2">
 
     <!-- Style sheets -->
-    <link rel="stylesheet" href="styles/main.css">
+    <link href="styles/main.css" rel="stylesheet" >
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="styles/materialize.css" rel="stylesheet">
     <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> -->
-    <link href="https://fonts.googleapis.com/css?family=Aref+Ruqaa" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
   </head>
-
-
   <body>
+
+    <div class="container">
+        <div class="row" id="data-display"></div>
+        <div class="row" id="data-input"></div>
+    </div>
 
     <!-- Scripts -->
     <script data-main="scripts/main" src="scripts/vendor/require.js"></script>
-
-    <div id="test">
-        <div id="container"></div>
-    </div>
-
   </body>
 </html>

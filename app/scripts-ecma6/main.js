@@ -10,7 +10,7 @@ require.config({
     backbone: 'vendor/backbone',
     react: 'vendor/react',
     reactdom: 'vendor/react-dom',
-    input: 'templates/input'
+    input: 'templates/input',
   },
 
   shim: {
@@ -28,18 +28,22 @@ require.config({
 require(['jquery', 'backbone', 'react', 'reactdom', 'input'],
   ($, Backbone, React, ReactDOM, Input) => {
 
+    /**
+     * Main Container View
+     */
     var MainView = Backbone.View.extend({
-      el: '#test',
+      el: '.container',
       
       initialize: function() {
-        this.container = document.getElementById('container');
-
-        // Render         
+        this.container = document.getElementById('data-input');
+        
+        // Render textarea        
         this.render();
       },
 
       render: function() {
-        ReactDOM.render(<Input/>, this.container);
+        var inputTextarea = ReactDOM.render(<Input/>, this.container);
+        console.log(inputTextarea);
       }
     });
 
