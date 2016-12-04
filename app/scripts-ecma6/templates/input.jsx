@@ -2,16 +2,19 @@ define(['react'], (React) => {
     
     class Input extends React.Component {
 
-        constructor() {
-            super();
+        constructor(props) {
+            super(props);
             this.state = {value: ''};
             this.handleKeystroke = this.handleKeystroke.bind(this);
         }
 
         handleKeystroke(event) {
-            // e.preventDefault();
+            // Set value to current text
             this.setState({value: event.target.value});
-            console.log(this.state);
+
+            // Set model 
+            this.props.model.set({'text': this.state.value});
+            console.log(this.props.model.toJSON());
         }
 
         render() {
@@ -20,21 +23,6 @@ define(['react'], (React) => {
             );
         }
     }
-
-    // let styles = {
-    //     input: {
-    //         opacity: "0.7",
-    //         borderRadius: "20px",
-    //         border: "0",
-    //         fontSize: "2em",
-    //         padding: "10px",
-    //         transition: "box-shadow 0.3s",
-    //         marginTop: "30vh",
-    //         marginLeft: "30vw",
-    //         fontFamily: 'Aref Ruqaa',
-    //     }
-    // }
-
 
     return Input;
 });

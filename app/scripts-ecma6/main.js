@@ -11,6 +11,7 @@ require.config({
     react: 'vendor/react',
     reactdom: 'vendor/react-dom',
     input: 'templates/input',
+    textModel: 'models/textModel'
   },
 
   shim: {
@@ -25,8 +26,8 @@ require.config({
 });
 
 
-require(['jquery', 'backbone', 'react', 'reactdom', 'input'],
-  ($, Backbone, React, ReactDOM, Input) => {
+require(['jquery', 'backbone', 'react', 'reactdom', 'input', 'textModel'],
+  ($, Backbone, React, ReactDOM, Input, TextModel) => {
 
     /**
      * Main Container View
@@ -36,13 +37,16 @@ require(['jquery', 'backbone', 'react', 'reactdom', 'input'],
       
       initialize: function() {
         this.container = document.getElementById('data-input');
+
+        // Init text model
+        this.textModel = new TextModel();
         
         // Render textarea        
         this.render();
       },
 
       render: function() {
-        var inputTextarea = ReactDOM.render(<Input/>, this.container);
+        var inputTextarea = ReactDOM.render(<Input model={this.textModel} />, this.container);
         console.log(inputTextarea);
       }
     });
