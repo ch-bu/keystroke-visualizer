@@ -14,7 +14,6 @@ define(['react'], (React) => {
 
             // Set model 
             this.props.model.set({'text': this.state.value});
-            console.log(this.props.model.toJSON());
         }
 
         render() {
