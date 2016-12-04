@@ -4,18 +4,19 @@ define(['react'], (React) => {
 
         constructor() {
             super();
-
+            this.state = {value: ''};
             this.handleKeystroke = this.handleKeystroke.bind(this);
         }
 
-        handleKeystroke() {
+        handleKeystroke(event) {
             // e.preventDefault();
-            console.log('The area was clicked.');
+            this.setState({value: event.target.value});
+            console.log(this.state);
         }
 
         render() {
             return (
-                <textarea id="inputTextarea" onKeyDown={this.handleKeystroke} type="text" autoFocus></textarea>
+                <textarea id="inputTextarea" onChange={this.handleKeystroke} type="text" autoFocus></textarea>
             );
         }
     }
