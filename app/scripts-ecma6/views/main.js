@@ -35,10 +35,26 @@ define(['backbone', 'react', 'reactdom', 'input', 'textModel'],
        * is triggered anew
        */
       textChanged: function() {
-        console.log('text changed');
+        // Get text and split it into an array of characters
+        // Lowercase characters so that case doesn't matter
+        let text = this.textModel.get('text')
+            .toLowerCase()
+            // .replace(/[.,\/# !\d+$%\^&\*;:{}=\-_`~()]/g,"")
+            .replace(/[^a-z]+/g, '')
+            .split('');
+
+        // Count number of occurences of characters in string
+        // The count is passed to the d3 visualization so that it 
+        // can enter and update new data
+        let countCharacter = text.reduce((countMap, character) => {
+            countMap[character] = ++countMap[character] || 1
+            return countMap;
+        }, {});
+
+        // Set dict with character count to model and update
+        this.textModel.set('charDict', countCharacter)
       }
     });
 
     return MainView;
-
 });
