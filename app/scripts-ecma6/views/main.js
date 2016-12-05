@@ -17,6 +17,7 @@ define(['backbone', 'react', 'reactdom', 'input', 'textModel'],
 
         // Listen to changes in model
         this.listenTo(this.textModel, 'change:text', this.textChanged);
+        this.listenTo(this.textModel, 'change:charDict', this.renderVisualization);
         
         // Render textarea        
         this.renderTextarea();
@@ -53,6 +54,10 @@ define(['backbone', 'react', 'reactdom', 'input', 'textModel'],
 
         // Set dict with character count to model and update
         this.textModel.set('charDict', countCharacter)
+      },
+
+      renderVisualization: function() {
+        console.log('change has occured');
       }
     });
 
