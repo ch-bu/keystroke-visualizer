@@ -13,24 +13,17 @@ define(['backbone', 'react', 'reactdom', 'input', 'textModel', 'visualization'],
 
         // Listen to changes in model
         this.listenTo(this.textModel, 'change:text', this.textChanged);
-        this.listenTo(this.textModel, 'change:charDict', this.updateVisualization);
         
         // Render textarea        
-        this.renderTextarea();
+        ReactDOM.render(<Input model={this.textModel} />,
+          document.getElementById('data-input'));
 
         // Render initial visualization
-        this.renderVisualization();
-      },
-
-      /**
-       * Render input textarea and
-       * assign model to it
-       */
-      renderTextarea: function() {
-        // Get div with textarea
-        // Needed for React component
-        let container = document.getElementById('data-input');
-        var inputTextarea = ReactDOM.render(<Input model={this.textModel} />, container);
+        ReactDOM.render(<Visualization 
+                          width={"100%"}
+                          height={"95%"}
+                          mainView={this} />,
+                          document.getElementById('data-display'));
       },
 
       /**
@@ -56,22 +49,6 @@ define(['backbone', 'react', 'reactdom', 'input', 'textModel', 'visualization'],
 
         // Set dict with character count to model and update
         this.textModel.set('charDict', countCharacter)
-      },
-
-      /**
-       * Render visualization 
-       */
-      updateVisualization: function() {
-        // console.log(this.textModel.get('charDict'));
-      },
-
-      /**
-       * Render visualization
-       */
-      renderVisualization: function() {
-        let divContainer = document.getElementById('data-display');
-        this.visualization = ReactDOM.render(<Visualization />, divContainer);
-        console.log(this.visualization);
       }
     });
 

@@ -10,6 +10,7 @@ require.config({
     backbone: 'vendor/backbone',
     react: 'vendor/react',
     reactdom: 'vendor/react-dom',
+    d3: 'vendor/d3',
     input: 'templates/input',
     visualization: 'templates/visualization',
     textModel: 'models/textModel',
