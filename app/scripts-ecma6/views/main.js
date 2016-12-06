@@ -1,5 +1,5 @@
-define(['backbone', 'react', 'reactdom', 'input', 'textModel'],
-    (Backbone, React, ReactDOM, Input, TextModel) => {
+define(['backbone', 'react', 'reactdom', 'input', 'textModel', 'visualization'],
+    (Backbone, React, ReactDOM, Input, TextModel, Visualization) => {
     
     /**
      * Main Container View
@@ -8,19 +8,18 @@ define(['backbone', 'react', 'reactdom', 'input', 'textModel'],
       el: '.container',
       
       initialize: function() {
-        // Get div with textarea
-        // Needed for React component
-        this.container = document.getElementById('data-input');
-
         // Init text model
         this.textModel = new TextModel();
 
         // Listen to changes in model
         this.listenTo(this.textModel, 'change:text', this.textChanged);
-        this.listenTo(this.textModel, 'change:charDict', this.renderVisualization);
+        this.listenTo(this.textModel, 'change:charDict', this.updateVisualization);
         
         // Render textarea        
         this.renderTextarea();
+
+        // Render initial visualization
+        this.renderVisualization();
       },
 
       /**
@@ -28,7 +27,10 @@ define(['backbone', 'react', 'reactdom', 'input', 'textModel'],
        * assign model to it
        */
       renderTextarea: function() {
-        var inputTextarea = ReactDOM.render(<Input model={this.textModel} />, this.container);
+        // Get div with textarea
+        // Needed for React component
+        let container = document.getElementById('data-input');
+        var inputTextarea = ReactDOM.render(<Input model={this.textModel} />, container);
       },
 
       /**
@@ -56,8 +58,20 @@ define(['backbone', 'react', 'reactdom', 'input', 'textModel'],
         this.textModel.set('charDict', countCharacter)
       },
 
+      /**
+       * Render visualization 
+       */
+      updateVisualization: function() {
+        // console.log(this.textModel.get('charDict'));
+      },
+
+      /**
+       * Render visualization
+       */
       renderVisualization: function() {
-        console.log('change has occured');
+        let divContainer = document.getElementById('data-display');
+        this.visualization = ReactDOM.render(<Visualization />, divContainer);
+        console.log(this.visualization);
       }
     });
 

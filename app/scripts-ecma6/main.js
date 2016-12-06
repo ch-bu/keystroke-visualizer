@@ -11,6 +11,7 @@ require.config({
     react: 'vendor/react',
     reactdom: 'vendor/react-dom',
     input: 'templates/input',
+    visualization: 'templates/visualization',
     textModel: 'models/textModel',
     mainView: 'views/main'
   },
