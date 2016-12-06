@@ -5,7 +5,7 @@ define(['react', 'd3'], (React, d3) => {
         constructor(props) {
             super(props);
 
-            console.log(props.mainView.textModel.toJSON());
+            // Listen for updates in the modal
             props.mainView.listenTo(props.mainView.textModel, 'change:charDict', this.testo);
         }
 
