@@ -49,8 +49,22 @@ define(['backbone', 'react', 'reactdom', 'input', 'textModel', 'visualization'],
             return countMap;
         }, {});
 
+        // Regenerate data
+        var newData = [];
+        for (let key in countCharacter) {
+          let numberArray = Array.apply(null,
+            {length: countCharacter[key]}).map(Number.call, Number);
+
+          // Add 1 to every element in array
+          numberArray = numberArray.map((e) => {
+            return e + 1;
+          }).map((e) => {
+            newData.push([key, e]);
+          });
+        }
+
         // Set dict with character count to model and update
-        this.textModel.set('charDict', countCharacter)
+        this.textModel.set('charDict', newData)
       }
     });
 

@@ -6,7 +6,8 @@ define(['react', 'd3', 'jquery'], (React, d3, $) => {
             super(props);
 
             // Listen for updates in the modal
-            props.mainView.listenTo(props.mainView.textModel, 'change:charDict', this.dataChanged);
+            props.mainView.listenTo(props.mainView.textModel,
+                'change:charDict', this.dataChanged.bind(this));
         }
 
         render() {
@@ -25,6 +26,7 @@ define(['react', 'd3', 'jquery'], (React, d3, $) => {
 
             // Append g with margins
             const g = svg.append('g')
+                .attr('id', 'frame')
                 .attr('width', width)
                 .attr('height', height)
                 .attr('transform', 'translate(' +
@@ -47,19 +49,44 @@ define(['react', 'd3', 'jquery'], (React, d3, $) => {
             ///////////////////
             // Create y axis //
             ///////////////////
-            var y = d3.scaleLinear()
-                .domain([0, 30])
-                .range([height, 0]);
+            var y = d3.scaleBand()
+                .domain(Array.apply(null, {length: 50}).map(Number.call, Number))
+                .range([height, 0])
+                .paddingInner([0.1]);
 
-            var yAxis = d3.axisLeft(y);
+            // var yAxis = d3.axisLeft(y);
 
-            g.append('g')
-                .attr('class', 'axis axis-y')
-                .call(yAxis);
+            // g.append('g')
+            //     .attr('class', 'axis axis-y')
+            //     .call(yAxis);
+
+            this.setState({svg: svg, x: x, y: y});
         }
 
         dataChanged() {
-            console.log('test');
+            // Get data
+            var data = this.props.mainView.textModel.get('charDict');
+
+            var rect = d3.select('#frame')
+                .selectAll('rect')
+                .data(data);
+
+            rect.enter().append('rect')
+                .attr('x', (d) => this.state.x(d[0]))
+                .attr('y', (d) => this.state.y(d[1]))
+                .attr('width', 25)
+                .attr('height', 4)
+                .merge(rect);
+
+            rect.exit().remove();
+
+            // d3.select('#frame').append('rect')
+            //     .attr('x', this.state.x('b'))
+            //     .attr('y', this.state.y(2))
+            //     .attr('width', 30)
+            //     .attr('height', 4);
+
+            // console.log(data);
         }
     }
 
