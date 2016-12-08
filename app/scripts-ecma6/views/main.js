@@ -18,10 +18,12 @@ define(['backbone', 'react', 'reactdom', 'input', 'textModel', 'visualization'],
         ReactDOM.render(<Input model={this.textModel} />,
           document.getElementById('data-input'));
 
+        // console.log(this.$el.width());
+
         // Render initial visualization
         ReactDOM.render(<Visualization 
-                          width={"100%"}
-                          height={"95%"}
+                          width={$('#data-display').width()}
+                          height={$('#data-display').height()}
                           mainView={this} />,
                           document.getElementById('data-display'));
       },
