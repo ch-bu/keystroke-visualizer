@@ -67,16 +67,22 @@ define(['react', 'd3', 'jquery'], (React, d3, $) => {
             // Get data
             var data = this.props.mainView.textModel.get('charDict');
 
+            console.log(data);
+
             var rect = d3.select('#frame')
                 .selectAll('rect')
                 .data(data);
 
+            console.log(rect.enter());
             rect.enter().append('rect')
                 .attr('x', (d) => this.state.x(d[0]))
-                .attr('y', (d) => this.state.y(d[1]))
+                .attr('y', 0)
                 .attr('width', 25)
                 .attr('height', 4)
-                .merge(rect);
+                .merge(rect)
+                .transition()
+                .duration(200)
+                .attr('y', (d) => this.state.y(d[1]));
 
             rect.exit().remove();
 
