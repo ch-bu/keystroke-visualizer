@@ -8,13 +8,58 @@ define(['react', 'd3', 'jquery'], (React, d3, $) => {
             // Listen for updates in the modal
             props.mainView.listenTo(props.mainView.textModel,
                 'change:charDict', this.dataChanged.bind(this));
+
+            // Listen for resize events
+            d3.select(window)
+                .on('resize', this.windowResized.bind(this));
         }
 
         render() {
+
             return (
                 <svg width={this.props.width} height={this.props.height}>
                 </svg>
             );
+        }
+
+        windowResized() {
+            // console.log('resize');
+
+            var svg = d3.select('svg');
+            var height = $('#data-display').height();
+            var width = $('#data-display').width();
+            var wrapperHeight = height - this.state.margin.top - this.state.margin.bottom;
+            var wrapperWidth = width - this.state.margin.left - this.state.margin.right;
+
+            console.log(height);
+
+            // Update svg 
+            svg
+                .attr('height', height)
+                .attr('width', width);
+
+            var g = d3.select('#wrapper')
+                .attr('width', wrapperHeight)
+                .attr('height', wrapperHeight)
+
+            // Rescale y
+            this.state.y.range[height, 0];
+            // console.log(this.state.height);
+            
+            // Rescale x
+            var x = d3.scaleBand()
+                .domain('abcdefghijklmnopqrstuvwxyz'.split(''))
+                .range([0, wrapperWidth]);
+            
+            svg.select('.axis-x')
+                .call(d3.axisBottom(x));
+            
+            // Rescale rectangles
+            d3.select('#frame')
+                .selectAll('rect')
+                .attr('width', wrapperWidth / 28)
+                .attr('height', wrapperHeight / 140)
+            
         }
 
         componentDidMount() {
@@ -26,6 +71,7 @@ define(['react', 'd3', 'jquery'], (React, d3, $) => {
 
             // Append g with margins
             const g = svg.append('g')
+                .attr('id', 'wrapper')
                 .attr('id', 'frame')
                 .attr('width', width)
                 .attr('height', height)
@@ -54,13 +100,8 @@ define(['react', 'd3', 'jquery'], (React, d3, $) => {
                 .range([height, 0])
                 .paddingInner([0.1]);
 
-            // var yAxis = d3.axisLeft(y);
-
-            // g.append('g')
-            //     .attr('class', 'axis axis-y')
-            //     .call(yAxis);
-
-            this.setState({svg: svg, x: x, y: y, height: height, width: width});
+            // Save state variables
+            this.setState({svg: svg, x: x, y: y, height: height, width: width, margin: margin});
         }
 
         dataChanged() {
