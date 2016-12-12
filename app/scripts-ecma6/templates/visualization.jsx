@@ -76,8 +76,8 @@ define(['react', 'd3', 'jquery'], (React, d3, $) => {
             rect.enter().append('rect')
                 .attr('x', (d) => this.state.x(d[0]))
                 .attr('y', 0)
-                .attr('width', 25)
-                .attr('height', 4)
+                .attr('width', this.state.width / 28)
+                .attr('height', this.state.height / 140)
                 .transition()
                 .duration(200)
                 .attr('y', (d) => this.state.y(d[1]));
