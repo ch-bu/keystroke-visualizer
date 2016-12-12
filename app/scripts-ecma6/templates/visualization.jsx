@@ -50,7 +50,7 @@ define(['react', 'd3', 'jquery'], (React, d3, $) => {
             // Create y axis //
             ///////////////////
             var y = d3.scaleBand()
-                .domain(Array.apply(null, {length: 50}).map(Number.call, Number))
+                .domain(Array.apply(null, {length: 100}).map(Number.call, Number))
                 .range([height, 0])
                 .paddingInner([0.1]);
 
@@ -60,39 +60,30 @@ define(['react', 'd3', 'jquery'], (React, d3, $) => {
             //     .attr('class', 'axis axis-y')
             //     .call(yAxis);
 
-            this.setState({svg: svg, x: x, y: y});
+            this.setState({svg: svg, x: x, y: y, height: height, width: width});
         }
 
         dataChanged() {
             // Get data
             var data = this.props.mainView.textModel.get('charDict');
 
-            console.log(data);
-
+            // Get all rectangles
             var rect = d3.select('#frame')
                 .selectAll('rect')
-                .data(data);
+                .data(data, (d) => d[2]);
 
-            console.log(rect.enter());
+            // Add new elements
             rect.enter().append('rect')
                 .attr('x', (d) => this.state.x(d[0]))
                 .attr('y', 0)
                 .attr('width', 25)
                 .attr('height', 4)
-                .merge(rect)
                 .transition()
                 .duration(200)
                 .attr('y', (d) => this.state.y(d[1]));
 
+            // Remove old elements
             rect.exit().remove();
-
-            // d3.select('#frame').append('rect')
-            //     .attr('x', this.state.x('b'))
-            //     .attr('y', this.state.y(2))
-            //     .attr('width', 30)
-            //     .attr('height', 4);
-
-            // console.log(data);
         }
     }
 
