@@ -23,8 +23,7 @@ define(['react', 'd3', 'jquery'], (React, d3, $) => {
         }
 
         windowResized() {
-            // console.log('resize');
-
+            // Init variables
             var svg = d3.select('svg');
             var height = $('#data-display').height();
             var width = $('#data-display').width();
@@ -57,6 +56,7 @@ define(['react', 'd3', 'jquery'], (React, d3, $) => {
             // Rescale rectangles
             d3.select('#frame')
                 .selectAll('rect')
+                .attr('x', (d) => x(d[0]))
                 .attr('width', wrapperWidth / 28)
                 .attr('height', wrapperHeight / 140)
             
