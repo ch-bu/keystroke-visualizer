@@ -30,16 +30,19 @@ define(['react', 'd3', 'jquery'], (React, d3, $) => {
             var wrapperHeight = height - this.state.margin.top - this.state.margin.bottom;
             var wrapperWidth = width - this.state.margin.left - this.state.margin.right;
 
-            console.log(height);
-
             // Update svg 
             svg
                 .attr('height', height)
                 .attr('width', width);
 
-            var g = d3.select('#wrapper')
-                .attr('width', wrapperHeight)
+            // Update frame g element
+            var g = d3.select('#frame')
+                .attr('width', wrapperWidth)
                 .attr('height', wrapperHeight)
+
+            // Update x-axis height
+            d3.select('.axis-x')
+                .attr('transform', 'translate(0,' + wrapperHeight + ')');
 
             // Rescale y
             this.state.y.range[height, 0];
@@ -52,14 +55,20 @@ define(['react', 'd3', 'jquery'], (React, d3, $) => {
             
             svg.select('.axis-x')
                 .call(d3.axisBottom(x));
+
+            // Rescale y
+            var y = d3.scaleBand()
+                .domain(Array.apply(null, {length: 100}).map(Number.call, Number))
+                .range([wrapperHeight, 0])
+                .paddingInner([0.1]);
             
             // Rescale rectangles
             d3.select('#frame')
                 .selectAll('rect')
                 .attr('x', (d) => x(d[0]))
+                .attr('y', (d) => y(d[1]))
                 .attr('width', wrapperWidth / 28)
                 .attr('height', wrapperHeight / 140)
-            
         }
 
         componentDidMount() {
@@ -71,7 +80,6 @@ define(['react', 'd3', 'jquery'], (React, d3, $) => {
 
             // Append g with margins
             const g = svg.append('g')
-                .attr('id', 'wrapper')
                 .attr('id', 'frame')
                 .attr('width', width)
                 .attr('height', height)
