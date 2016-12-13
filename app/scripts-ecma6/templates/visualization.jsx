@@ -46,7 +46,6 @@ define(['react', 'd3', 'jquery'], (React, d3, $) => {
 
             // Rescale y
             this.state.y.range[height, 0];
-            // console.log(this.state.height);
             
             // Rescale x
             var x = d3.scaleBand()
@@ -69,6 +68,10 @@ define(['react', 'd3', 'jquery'], (React, d3, $) => {
                 .attr('y', (d) => y(d[1]))
                 .attr('width', wrapperWidth / 28)
                 .attr('height', wrapperHeight / 140)
+
+            // Set state variables
+            this.setState({width: wrapperWidth, height: wrapperHeight, 
+                           x: x, y: y});
         }
 
         componentDidMount() {
@@ -121,10 +124,19 @@ define(['react', 'd3', 'jquery'], (React, d3, $) => {
                 .selectAll('rect')
                 .data(data, (d) => d[2]);
 
+            // Get length of data
+            var maxValue = d3.max(data, (d) => d[1]);
+
+            // var y = d3.scaleBand()
+            //     .domain(Array.apply(null, {length: maxValue}).map(Number.call, Number))
+            //     .range([this.state.height, 0])
+            //     .paddingInner([0.1]);
+
             // Add new elements
             rect.enter().append('rect')
                 .attr('x', (d) => this.state.x(d[0]))
                 .attr('y', 0)
+                .attr('fill', () => '#'+Math.floor(Math.random()*16777215).toString(16))
                 .attr('width', this.state.width / 28)
                 .attr('height', this.state.height / 140)
                 .transition()

@@ -1,6 +1,6 @@
 html, body {
   // background-color: #c628d7;
-  font-family: 'Dosis', serif;
+  font-family: 'Crimson Text', serif;
 }
 
 .container {
@@ -15,7 +15,6 @@ html, body {
       height: 90%;
       outline: none;
       background-color: #fafafa;
-      // opacity: 0.7;
       border-radius: 10px;
       border: 0;
       font-size: 2em;
@@ -25,6 +24,16 @@ html, body {
       &:active {
         box-shadow: none;
       }
+
+
+      @media screen and (max-width: 800px) {
+        font-size: 1.3em;
+      }
+
+      @media screen and (max-width: 1200px) {
+        font-size: 1.7em;
+      }
+
     }
   }
 
