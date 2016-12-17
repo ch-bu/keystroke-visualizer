@@ -56,7 +56,7 @@ require(['jquery', 'backbone', 'mainView'],
         scope: '/'
       })
         .then((registration) => {
-          console.log('registrations');
+          console.log('Service Worker is registered');
         }).catch((e) => {
           console.error('Error during service worker registration:', e);
         });

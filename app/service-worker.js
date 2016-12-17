@@ -35,9 +35,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('fetch', (event) => {
     event.respondWith(
         caches.match(event.request).then((response) => {
-          if (response) return response;
-
-          return fetch(event.request);
+          return response || fetch(event.request);
         })
     );
 });
@@ -46,12 +44,8 @@ self.addEventListener('fetch', (event) => {
  * Listen for active of service worker
  */
 self.addEventListener('activate', function(event) {
-    caches.keys().then((name) => {
-      console.log(name);
-    });
     // Remove old service workers
     event.waitUntil(
-
         caches.keys().then(function(cacheNames) {
           return Promise.all(
             cacheNames.filter(function(cacheName) {
