@@ -52,9 +52,11 @@ require(['jquery', 'backbone', 'mainView'],
     if ('serviceWorker' in navigator &&
       (window.location.protocol === 'https:' || isLocalhost)) {
 
-      navigator.serviceWorker.register('scripts/service-worker.js')
+      navigator.serviceWorker.register('service-worker.js', {
+        scope: '/'
+      })
         .then((registration) => {
-          console.log('registration');
+          console.log('registrations');
         }).catch((e) => {
           console.error('Error during service worker registration:', e);
         });

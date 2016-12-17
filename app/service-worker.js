@@ -1,15 +1,29 @@
 // Constant for name of my service worker
-const STATICCACHENAME = 'keystroker-7';
+const STATICCACHENAME = 'keystroker-2';
 
 /**
  * Listen for install event of service worker
  */
 self.addEventListener('install', (event) => {
+    console.log('install');
     event.waitUntil(
         caches.open(STATICCACHENAME).then((cache) => {
             return cache.addAll([
                 '/',
-                '/scripts/vendor/require.js'
+                '/scripts/vendor/require.js',
+                '/styles/main.css',
+                '/styles/materialize.css',
+                '/scripts/main.js',
+                '/scripts/views/main.js',
+                '/scripts/models/textModel.js',
+                '/scripts/vendor/jquery.js',
+                '/scripts/vendor/underscore.js',
+                '/scripts/vendor/react.js',
+                '/scripts/vendor/react-dom.js',
+                '/scripts/templates/input.js',
+                '/scripts/templates/visualization.js',
+                '/scripts/vendor/backbone.js',
+                '/scripts/vendor/d3.js'
             ]);
         })
     );
@@ -20,7 +34,11 @@ self.addEventListener('install', (event) => {
  */
 self.addEventListener('fetch', (event) => {
     event.respondWith(
-        new Response('Hello world')
+        caches.match(event.request).then((response) => {
+          if (response) return response;
+
+          return fetch(event.request);
+        })
     );
 });
 
@@ -28,8 +46,12 @@ self.addEventListener('fetch', (event) => {
  * Listen for active of service worker
  */
 self.addEventListener('activate', function(event) {
+    caches.keys().then((name) => {
+      console.log(name);
+    });
     // Remove old service workers
     event.waitUntil(
+
         caches.keys().then(function(cacheNames) {
           return Promise.all(
             cacheNames.filter(function(cacheName) {
