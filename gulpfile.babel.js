@@ -47,11 +47,39 @@ gulp.task('bower-files', () => {
 });
 
 /**
+ * Copy files into dist directory
+ */
+gulp.task('copy', () => {
+  // Copy main files
+  gulp.src([
+    'app/humans.txt',
+    'app/manifest.json',
+    'app/robots.txt',
+    'app/service-worker.js',
+  ]).pipe(gulp.dest('dist'));
+
+  // // Copy CSS-Files
+  // gulp.src(['.tmp/styles/*.css',
+  //           '.tmp/styles/*.css.map'])
+  //   .pipe(gulp.dest('dist/styles'));
+
+  // Copy images
+  gulp.src('app/images/**/*.png')
+    .pipe(gulp.dest('dist/images'));
+});
+
+
+/**
  * Lint javascript files
  */
 gulp.task('lint', () =>
-  gulp.src(['app/scripts/app/**/*.js'])
-    .pipe($.eslint({fix: true}))
+  gulp.src(['app/scripts/**/*.js'])
+    .pipe($.eslint({
+      fix: true,
+      envs: {
+        es6: true
+      }
+    }))
     .pipe($.eslint.format())
     .pipe($.if(!browserSync.active, $.eslint.failOnError()))
 );
@@ -60,80 +88,34 @@ gulp.task('lint', () =>
  * Convert js files from ecmascript 6 
  */
 gulp.task('babel', () => {
-  return gulp.src(['app/scripts-ecma6/**/*.js',
-                   'app/scripts-ecma6/**/*.jsx',
-                  '!app/scripts-ecma6/vendor/*.js'])
+  gulp.src(['app/scripts/**/*.js',
+            'app/scripts/**/*.jsx',
+            '!app/scripts/vendor/*.js'])
     .pipe(babel({
       presets: ['es2015'],
       plugins: ['transform-react-jsx']
     }))
     .pipe(gulp.dest('.tmp/scripts'));
+
+  gulp.src('app/service-worker.js')
+    .pipe(babel({
+      presets: ['es2015']
+    }))
+    .pipe(gulp.dest(('.tmp/')));
 });
 
-// /**
-//  * Build templates
-//  */
-// gulp.task('templates', () => {
-//   gulp.src('app/templates/*.hbs')
-//     .pipe(handlebars({
-//       handlebars: require('handlebars')
-//     }))
-//     .pipe(wrap('Handlebars.template(<%= contents %>)'))
-//     .pipe(declare({
-//       namespace: 'MyApp.templates',
-//       noRedeclare: true,
-//     }))
-//     .pipe(concat('templates.js'))
-//     .pipe(requireConvert())
-//     .pipe(gulp.dest('app/scripts/', {overwrite: true}));
-// });
-
-
-// /**
-//  * Optimize images
-//  */
-// gulp.task('images', () =>
-//   gulp.src('app/images/**/*')
-//     .pipe($.cache($.imagemin({
-//       progressive: true,
-//       interlaced: true
-//     })))
-//     .pipe(gulp.dest('dist/images'))
-//     .pipe($.size({title: 'images'}))
-// );
-
-// /**
-//  * Copy all files at the root level (app)
-//  */
-// gulp.task('copy', () =>
-//   gulp.src([
-//     'app/*',
-//     '!app/*.html',
-//   ], {
-//     dot: true
-//   }).pipe(gulp.dest('dist'))
-//     .pipe($.size({title: 'copy'}))
-// );
-
-// /**
-//  * Copy font files
-//  */
-// gulp.task('copy-fonts', () => {
-//   gulp.src([
-//   'app/font/**/*',
-//   ])
-//   .pipe(gulp.dest('dist/font'));
-
-//   gulp.src([
-//     'app/fonts/**/*',
-//     ])
-//     .pipe(gulp.dest('dist/fonts'));
-
-//   gulp.src([
-//     'app/templates/**/*',
-//     ])
-//     .pipe(gulp.dest('dist/templates'));
-// });
+/**
+ * Optimize images
+ */
+gulp.task('images', () =>
+  gulp.src('app/images/**/*')
+    .pipe($.cache($.imagemin({
+      progressive: true,
+      interlaced: true
+    })))
+    .pipe(gulp.dest('dist/images'))
+    .pipe($.size({title: 'images'}))
+);
 
 /**
  * Compile and automatically prefix stylesheets
@@ -163,97 +145,56 @@ gulp.task('styles', () => {
     .pipe($.if('*.css', $.cssnano()))
     .pipe($.size({title: 'styles'}))
     .pipe($.sourcemaps.write('./'))
-    .pipe(gulp.dest('.tmp/styles'));
+    .pipe(gulp.dest('.tmp/styles'))
+    .pipe(gulp.dest('dist/styles'));
 
   gulp.src('app/styles/*.css')
     .pipe($.newer('.temp/styles'))
     .pipe($.sourcemaps.init())
     .pipe($.if('*.css', $.cssnano()))
     .pipe($.sourcemaps.write('./'))
-    .pipe(gulp.dest('.tmp/styles'));
+    .pipe(gulp.dest('.tmp/styles'))
+    .pipe(gulp.dest('dist/styles'));
 });
 
-// Concatenate and minify JavaScript. Optionally transpiles ES2015 code to ES5.
-// to enable ES2015 support remove the line `"only": "gulpfile.babel.js",` in the
-// `.babelrc` file.
-// gulp.task('scripts-vendor', () =>
-//   gulp.src([
-//     // Note: Since we are not using useref in the scripts build pipeline,
-//     //       you need to explicitly list your scripts here in the right order
-//     //       to be correctly concatenated
-//     './app/scripts/vendor/handlebars.js',
-//     './app/scripts/vendor/idb.js',
-//     './app/scripts/templates.js',
-//     './app/scripts/vendor/jquery.js',
-//     './app/scripts/vendor/jquery-migrate.js',
-//     './app/scripts/vendor/underscore.js',
-//     './app/scripts/vendor/backbone.js',
-//     './app/scripts/vendor/moment.js',
-//     // './app/scripts/vendor/require.js',
-//     './app/scripts/vendor/materialize.js',
-//     './app/scripts/vendor/d3.js',
-//   ])
-//     .pipe($.newer('.tmp/scripts'))
-//     .pipe($.newer('.dist/scripts'))
-//     .pipe($.sourcemaps.init())
-//     // .pipe($.babel({compact: false}))
-//     .pipe($.sourcemaps.write())
-//     .pipe($.concat('vendor.min.js'))
-//     .pipe($.uglify())
-//     .pipe($.size({title: 'scripts'}))
-//     .pipe($.sourcemaps.write('.'))
-//     .pipe(gulp.dest('dist/scripts'))
-//     .pipe(gulp.dest('.tmp/scripts'))
-// );
+/**
+ * Scan your HTML for assets & optimize them
+ */
+gulp.task('html', () => {
+  return gulp.src('app/*.html')
+    .pipe($.useref({
+      searchPath: '{app}',
+      noAssets: true
+    }))
 
-
-// gulp.task('copy', () =>
-//   gulp.src([
-//     'app/*',
-//     '!app/*.html',
-//   ], {
-//     dot: true
-//   }).pipe(gulp.dest('dist'))
-//     .pipe($.size({title: 'copy'}))
-// );
-
-// /**
-//  * Scan your HTML for assets & optimize them
-//  */
-// gulp.task('html', () => {
-//   return gulp.src('app/*.html')
-//     .pipe($.useref({
-//       searchPath: '{.tmp,app}',
-//       noAssets: true
-//     }))
-
-//     // Minify any HTML
-//     .pipe($.if('*.html', $.htmlmin({
-//       removeComments: true,
-//       collapseWhitespace: true,
-//       collapseBooleanAttributes: true,
-//       removeAttributeQuotes: true,
-//       removeRedundantAttributes: true,
-//       removeEmptyAttributes: true,
-//       removeScriptTypeAttributes: true,
-//       removeStyleLinkTypeAttributes: true,
-//       removeOptionalTags: true
-//     })))
-//     // Output files
-//     .pipe($.if('*.html', $.size({title: 'html', showFiles: true})))
-//     .pipe(gulp.dest('.tmp'));
-// });
+    // Minify any HTML
+    .pipe($.if('*.html', $.htmlmin({
+      removeComments: true,
+      collapseWhitespace: true,
+      collapseBooleanAttributes: true,
+      removeAttributeQuotes: true,
+      removeRedundantAttributes: true,
+      removeEmptyAttributes: true,
+      removeScriptTypeAttributes: true,
+      removeStyleLinkTypeAttributes: true,
+      removeOptionalTags: true
+    })))
+    // Output files
+    .pipe($.if('*.html', $.size({title: 'html', showFiles: true})))
+    .pipe(gulp.dest('.tmp'))
+    .pipe(gulp.dest('dist'));
+});
 
 /**
  * Clean output directory
  */
-gulp.task('clean', () => del(['.tmp', 'dist/*', '!dist/.git'], {dot: true}));
+gulp.task('clean', () => del(['.tmp', 'dist'], {dot: true}));
 
 
 /**
  * Watch files for changes & reload
  */
-gulp.task('serve', ['bower-files', 'styles'], () => {
+gulp.task('serve', ['clean', 'bower-files', 'html', 'styles', 'babel'], () => {
   browserSync({
     notify: false,
     // Customize the Browsersync console logging prefix
@@ -266,60 +207,42 @@ gulp.task('serve', ['bower-files', 'styles'], () => {
     // https: true,
     port: 3000,
     server: {
-      baseDir: ['.tmp', 'app'],
-      middleware: function (req, res, next) {
-
-        // Website you wish to allow to connect
-        res.setHeader('Access-Control-Allow-Origin', 'https://open-api.bahn.de');
-
-        // Request methods you wish to allow
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-        // Request headers you wish to allow
-        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-        // Set to true if you need the website to include cookies in the requests sent
-        // to the API (e.g. in case you use sessions)
-        res.setHeader('Access-Control-Allow-Credentials', true);
-
-        next();
-      }
+      baseDir: ['.tmp']
     }
   });
 
-  gulp.watch(['app/*.html'], reload);
+  gulp.watch(['app/*.html'], ['html', reload]);
   gulp.watch(['app/styles/*.scss'], ['styles', reload]);
-  gulp.watch(['app/scripts-ecma6/**/*.js'], ['babel', 'lint', reload]);
-  gulp.watch(['app/scripts-ecma6/templates/*.jsx'], ['babel', 'lint', reload]);
-  // gulp.watch(['app/images/**/*'], reload);
-  // gulp.watch(['app/templates/*'], ['templates', reload]);
+  gulp.watch(['app/scripts/**/*.js'], ['babel', 'lint', reload]);
+  gulp.watch(['app/scripts/templates/*.jsx'], ['babel', 'lint', reload]);
+  gulp.watch(['app/service-worker.js'], ['babel', 'lint', reload]);
 });
 
-// /**
-//  * Build and serve the output from the dist build
-//  */
-// gulp.task('serve:dist', () =>
-//   browserSync({
-//     notify: false,
-//     logPrefix: 'WSK',
-//     // Allow scroll syncing across breakpoints
-//     scrollElementMapping: ['main', '.mdl-layout'],
-//     // Run as an https by uncommenting 'https: true'
-//     // Note: this uses an unsigned certificate which on first access
-//     //       will present a certificate warning in the browser.
-//     // https: true,
-//     server: 'dist',
-//     port: 3001
-//   })
-// );
+/**
+ * Build and serve the output from the dist build
+ */
+gulp.task('serve:dist', () =>
+  browserSync({
+    notify: false,
+    logPrefix: 'WSK',
+    // Allow scroll syncing across breakpoints
+    scrollElementMapping: ['main', '.mdl-layout'],
+    // Run as an https by uncommenting 'https: true'
+    // Note: this uses an unsigned certificate which on first access
+    //       will present a certificate warning in the browser.
+    // https: true,
+    server: 'dist',
+    port: 3001
+  })
+);
 
-// /**
-//  * Build production files, the default task
-//  */
-// gulp.task('default', ['clean'], cb =>
-//   runSequence(
-//     ['clean', 'bower-files', 'lint', 'html',
-//     'styles', 'images', 'copy', 'copy-fonts'],
-//     cb
-//   )
-// );
+/**
+ * Build production files, the default task
+ */
+gulp.task('default', ['clean'], cb =>
+  runSequence(
+    ['styles', 'bower-files', 'html', 'images', 'babel',
+    'copy'],
+    cb
+  )
+);

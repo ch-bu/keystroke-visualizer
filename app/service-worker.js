@@ -11,19 +11,19 @@ self.addEventListener('install', (event) => {
             return cache.addAll([
                 '/',
                 '/scripts/vendor/require.js',
+                '/scripts/main.js',
                 '/styles/main.css',
                 '/styles/materialize.css',
-                '/scripts/main.js',
-                '/scripts/views/main.js',
-                '/scripts/models/textModel.js',
-                '/scripts/vendor/jquery.js',
-                '/scripts/vendor/underscore.js',
-                '/scripts/vendor/react.js',
-                '/scripts/vendor/react-dom.js',
-                '/scripts/templates/input.js',
-                '/scripts/templates/visualization.js',
-                '/scripts/vendor/backbone.js',
-                '/scripts/vendor/d3.js'
+                // '/scripts/views/main.js',
+                // '/scripts/models/textModel.js',
+                // '/scripts/vendor/jquery.js',
+                // '/scripts/vendor/underscore.js',
+                // '/scripts/vendor/react.js',
+                // '/scripts/vendor/react-dom.js',
+                // '/scripts/templates/input.js',
+                // '/scripts/templates/visualization.js',
+                // '/scripts/vendor/backbone.js',
+                // '/scripts/vendor/d3.js'
             ]);
         })
     );
