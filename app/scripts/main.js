@@ -53,7 +53,7 @@ require(['jquery', 'backbone', 'mainView'],
       (window.location.protocol === 'https:' || isLocalhost)) {
 
       navigator.serviceWorker.register('service-worker.js', {
-        scope: '/'
+        scope: '/keystroker'
       })
         .then((registration) => {
           console.log('Service Worker is registered');

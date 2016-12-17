@@ -1,9 +1,9 @@
 {
 	"manifest_version": 2,
-	"name": "Learning goal generator",
+	"name": "Keystroke visualizer",
 	"start_url": ".",
 	"background-color": "#fff",
-	"description": "A webapp that helps teachers write learning goals",
+	"description": "A webapp that visualizes the keystroke you do when typing",
 	"short_name": "LGG",
 	"display": "standalone"
 }
