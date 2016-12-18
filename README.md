@@ -2,6 +2,8 @@
 
 This little app visualizes the keystrokes you make while you are typing. A demo can be found [here](https://ch-bu.github.io/keystroker/).
 
+![Keystroke Visualizer](keystroke-visualizer.png)
+
 
 ## How to run locally
 
