@@ -1,7 +1,7 @@
 {
-  "name": "learning-goal-generator",
+  "name": "keystroke visualizer",
   "version": "1.0.0",
-  "description": "A website that guides teachers in writing proper learning goals",
+  "description": "A website visualizes the keytroke you make when typing",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

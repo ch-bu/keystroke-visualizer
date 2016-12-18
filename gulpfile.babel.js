@@ -58,16 +58,10 @@ gulp.task('copy', () => {
     'app/service-worker.js',
   ]).pipe(gulp.dest('dist'));
 
-  // // Copy CSS-Files
-  // gulp.src(['.tmp/styles/*.css',
-  //           '.tmp/styles/*.css.map'])
-  //   .pipe(gulp.dest('dist/styles'));
-
   // Copy images
   gulp.src('app/images/**/*.png')
     .pipe(gulp.dest('dist/images'));
 });
-
 
 /**
  * Lint javascript files
@@ -134,9 +128,7 @@ gulp.task('styles', () => {
   ];
 
   // For best performance, don't add Sass partials to `gulp.src`
-  gulp.src([
-    'app/styles/*.scss',
-  ])
+  gulp.src('app/styles/*.scss')
     .pipe($.newer('.tmp/styles'))
     .pipe($.sourcemaps.init())
     .pipe($.sass({precision: 10}).on('error', $.sass.logError))
@@ -172,12 +164,15 @@ gulp.task('html', () => {
       removeComments: true,
       collapseWhitespace: true,
       collapseBooleanAttributes: true,
-      removeAttributeQuotes: true,
+      removeAttributeQuotes: false,
       removeRedundantAttributes: true,
       removeEmptyAttributes: true,
       removeScriptTypeAttributes: true,
       removeStyleLinkTypeAttributes: true,
-      removeOptionalTags: true
+      // In order for the browser to reload
+      // the body tag must be present
+      // https://github.com/BrowserSync/browser-sync#requirements
+      removeOptionalTags: false
     })))
     // Output files
     .pipe($.if('*.html', $.size({title: 'html', showFiles: true})))
@@ -194,20 +189,31 @@ gulp.task('clean', () => del(['.tmp', 'dist'], {dot: true}));
 /**
  * Watch files for changes & reload
  */
-gulp.task('serve', ['clean', 'bower-files', 'html', 'styles', 'babel'], () => {
+gulp.task('serve', ['html', 'bower-files', 'styles', 'babel'], () => {
   browserSync({
-    notify: false,
+    notify: true,
     // Customize the Browsersync console logging prefix
-    logPrefix: 'WSK',
+    logPrefix: 'Keystroker',
     // Allow scroll syncing across breakpoints
-    scrollElementMapping: ['main', '.mdl-layout'],
+    // scrollElementMapping: ['main', '.mdl-layout'],
     // Run as an https by uncommenting 'https: true'
     // Note: this uses an unsigned certificate which on first access
     //       will present a certificate warning in the browser.
     // https: true,
     port: 3000,
     server: {
-      baseDir: ['.tmp']
+      baseDir: '.tmp/'
+    },
+    // Customise the placement of the snippet
+    // and ignore certain paths
+    snippetOptions: {
+        // Provide a custom Regex for inserting the snippet.
+        rule: {
+            match: /<body>/i,
+            fn: function (snippet, match) {
+                return snippet + match;
+            }
+        }
     }
   });
 
@@ -224,7 +230,7 @@ gulp.task('serve', ['clean', 'bower-files', 'html', 'styles', 'babel'], () => {
 gulp.task('serve:dist', () =>
   browserSync({
     notify: false,
-    logPrefix: 'WSK',
+    logPrefix: 'Keystroker',
     // Allow scroll syncing across breakpoints
     scrollElementMapping: ['main', '.mdl-layout'],
     // Run as an https by uncommenting 'https: true'
